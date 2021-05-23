@@ -41,11 +41,6 @@
     <nav class="navbar navbar-expand-lg navbar-dark static-top dark-background">
       <div class="container">
         <a class="navbar-brand rubik branding" href="#">Herbal Identification</a>
-        <div id="sidebar" class="sidebar">
-          <div class="extra">
-            <a id="uploadimage" class="btn btn-warning">Upload</a>
-          </div>
-        </div>
       </div>
     </nav>
 
@@ -62,9 +57,11 @@
       </div>
     </div>
 
-    <!-- Footer -->
-    <!-- <footer class="page-footer font-small blue">
-    </footer> -->
+    <!-- <input type="file" name="img_uploaded" id="img_uploaded" accept="image/*" onchange="upload();">  -->
+    <form enctype="multipart/form-data" action="/upload" method="post" id='form_uploadimage'>
+    <input type="file" name="img_uploaded" id="img_uploaded" accept="image/*" onchange="upload();">
+    </form>
+
 
     <!-- Bootstrap core JavaScript -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

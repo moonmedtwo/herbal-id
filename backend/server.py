@@ -27,38 +27,15 @@ def parse_static_filepath(filepath):
     return '/'.join(split_filepath)
 
 class UploadHandler(tornado.web.RequestHandler):
-    def post(self, name=None):
-        # TODO Fix this with how we will be getting the file from the front end...
-        # TODO change the way that we save the model?
-        self.application.logger.info("Recieved a file")
-        # pic = str(self.request.body)
-        # # print(pic.split(','))
-        # base64_string = pic.split(",")[1]
-        # img_data = base64.b64decode(base64_string)
-        # color_fname = "color.png"
-        # # relative_path = "img/" + color_fname
-        # output_color_file = STATIC_IMG_FOLDER + "/" + color_fname
+    def post(self):
+        original_fname = 'tmp_img'
 
-        # # Writes the color image
-        # with open(output_color_file, "wb+") as out_f:
-        #     out_f.write(img_data)
+        final_filename = original_fname + '.jpg'
+        output_file = open(os.path.join(STATIC_IMG_FOLDER,final_filename), 'wb')
+        output_file.write(self.request.body)
 
-        # greyscale_fname = "greyscale.png"
-
-        # make_processable(greyscale_fname, output_color_file)
-
-        # # We shouldnt need to pass it a string anymore
-        # export_image_location = run_model(greyscale_fname)
-        # if verbose:
-        #     print(export_image_location)
-        # static_image_location = parse_static_filepath(export_image_location)
-        # if verbose:
-        #     print(static_image_location)
-
-        # self.write({
-        #     "result": "success",
-        #     "location": static_image_location
-        # })
+        outstr = f'file {final_filename} is uploaded'
+        print(outstr)
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):  # I *think* name is the sub endpoint?
