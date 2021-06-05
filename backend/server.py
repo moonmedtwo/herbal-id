@@ -14,6 +14,9 @@ import tornado.options
 import tornado.web
 import signal
 
+from backend import trained_network_init, predict
+from mysql_client import match_herb
+
 verbose = ((sys.argv[1] if 1 < len(sys.argv) else "")=="verbose")
 
 STATIC_FOLDER = os.path.join(os.path.dirname(__file__), 'static')
@@ -31,11 +34,14 @@ class UploadHandler(tornado.web.RequestHandler):
         original_fname = 'tmp_img'
 
         final_filename = original_fname + '.jpg'
-        output_file = open(os.path.join(STATIC_IMG_FOLDER,final_filename), 'wb')
+        output_path = os.path.join(STATIC_IMG_FOLDER,final_filename)
+        output_file = open(output_path, 'wb')
         output_file.write(self.request.body)
 
-        outstr = f'file {final_filename} is uploaded'
-        print(outstr)
+        classNo = int(predict(output_path)) # convert from np type to python native
+        classNo += 1 # this starts from 0 while mysql starts from 1
+        name,desc = match_herb(classNo)
+        print(f'{name} - ')
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):  # I *think* name is the sub endpoint?
@@ -117,6 +123,8 @@ if __name__ == "__main__":
 
     if verbose:
         print(options)
+
+    trained_network_init()
 
     app = MainApplication(**options)
     app.run()
