@@ -15,6 +15,18 @@ function upload() {
       {
           method: "POST",
           body: files[0]
-      });
+      })
+      .then(response => response.json())
+      .then(data => 
+        {
+            console.log(data);
+            document.getElementById("name_placeholder").textContent = data["name"] + " - Xác suất: " + data["prob"] + "%"
+            document.getElementById("intro_placeholder").textContent = data["intro"]
+            document.getElementById("desc_placeholder").textContent = data["desc"]
+            document.getElementById("attr_placeholder").textContent = data["attr"]
+            document.getElementById("function_placeholder").textContent = data["function"]
+            document.getElementById("usage_placeholder").textContent = data["usage"]
+            document.getElementById("storage_placeholder").textContent = data["storage"]
+        });
   } 
 }

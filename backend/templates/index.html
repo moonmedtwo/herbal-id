@@ -9,7 +9,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
 
-    <title>Herbal ID | Tell every about herbals</title>
+    <title>Nhận dạng thảo dược</title>
 
     <!-- Bootstrap core CSS -->
     <link
@@ -31,16 +31,9 @@
   <body>
     <!-- Navigation -->
 
-    <style>
-      #zbeubeu {
-        width: 400px;
-        height: 600px;
-      }
-    </style>
-
     <nav class="navbar navbar-expand-lg navbar-dark static-top dark-background">
       <div class="container">
-        <a class="navbar-brand rubik branding" href="#">Herbal Identification</a>
+        <a class="navbar-brand rubik branding" href="#">Nhận dạng thảo dược</a>
       </div>
     </nav>
 
@@ -51,7 +44,16 @@
           <div class="col">
             <img class="image" src="" height="100%" width="100%" id="image" />
           </div>
-          <div class="col" id="container_col"><div id="zbeubeu"></div></div>
+          <div class="col" id="container_col">
+            <b> <div id="name_placeholder"> {{herbInfo}} </div> </b>
+            <br>
+            <b>Giới thiệu: </b><div id="intro_placeholder"> </div> 
+            <b>Mô tả: </b><div id="desc_placeholder"> </div> 
+            <b>Tính vị: </b><div id="attr_placeholder"> </div> 
+            <b>Tác dụng: </b><div id="function_placeholder"> </div> 
+            <b>Liều dùng: </b><div id="usage_placeholder"> </div> 
+            <b>Bảo quản: </b><div id="storage_placeholder"> </div> 
+          </div>
         </div>
         <p class="tips rubik"></p>
       </div>

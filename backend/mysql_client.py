@@ -8,18 +8,35 @@ def match_herb(classNo):
 
     cursor = cnx.cursor()
 
-    query = "SELECT herb_No, herb_name, herb_desc FROM `herbDB`.`herb`"
+    query = "SELECT * FROM `herbDB`.`herb`"
     query += "WHERE herb_No = %s"
     
     cursor.execute(query, (classNo,))
 
     __name = 0
+    __intro = 0
     __desc = 0
-    for (idx, name, desc) in cursor:
+    __attr = 0
+    __function = 0
+    __usage = 0
+    __storage = 0
+    for (idx, name, intro, desc, attr, function, usage, storage) in cursor:
         __name = name
+        __intro = intro
         __desc = desc
+        __attr = attr
+        __function = function
+        __usage = usage
+        __storage = storage
 
     cursor.close()
     cnx.close()
 
-    return __name,__desc
+    ret = {"name":__name,
+            "intro":__intro,
+            "desc":__desc,
+            "attr":__attr,
+            "function":__function,
+            "usage":__usage,
+            "storage":__storage}
+    return ret

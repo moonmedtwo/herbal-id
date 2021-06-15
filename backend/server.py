@@ -9,6 +9,7 @@ import sys
 import uuid
 # from test import run
 
+import tornado.httpclient
 import tornado.ioloop
 import tornado.options
 import tornado.web
@@ -16,6 +17,9 @@ import signal
 
 from backend import trained_network_init, predict
 from mysql_client import match_herb
+
+import urllib
+import numpy as np
 
 verbose = ((sys.argv[1] if 1 < len(sys.argv) else "")=="verbose")
 
@@ -38,16 +42,42 @@ class UploadHandler(tornado.web.RequestHandler):
         output_file = open(output_path, 'wb')
         output_file.write(self.request.body)
 
-        classNo = int(predict(output_path)) # convert from np type to python native
-        classNo += 1 # this starts from 0 while mysql starts from 1
-        name,desc = match_herb(classNo)
-        print(f'{name} - ')
+        classProbs = predict(output_path)
+        class1st = np.argmax(classProbs)
+        class1st_prob = classProbs[0,class1st] * 100
+        class1st_prob = np.round(class1st_prob, decimals=2)
+        classProbs[0,class1st] = 0
+
+        class2nd = np.argmax(classProbs)
+        class2nd_prob = classProbs[0,class2nd] * 100
+        class2nd_prob = np.round(class2nd_prob, decimals=2)
+        classProbs[0,class2nd] = 0
+
+        class3rd = np.argmax(classProbs)
+        class3rd_prob = classProbs[0,class3rd] * 100
+        class3rd_prob = np.round(class3rd_prob, decimals=2)
+
+        class1st += 1 # this starts from 0 while mysql starts from 1
+        class2nd += 1
+        class3rd += 1
+
+        matched1st = match_herb(int(class1st))
+        matched2nd = match_herb(int(class2nd))
+        matched3rd = match_herb(int(class3rd))
+
+        matched1st['prob'] = float(class1st_prob)
+        matched1st['2nd'] = matched2nd['name']
+        matched1st['3rd'] = matched3rd['name']
+        matched1st['2nd_prob'] = float(class2nd_prob)
+        matched1st['3rd_prob'] = float(class3rd_prob)
+
+        self.finish(matched1st)
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):  # I *think* name is the sub endpoint?
         # NOTE - if you pass self.write a dictionary, it will automatically write out
         # JSON and set the content type to JSON
-        self.render("index.html")
+        self.render("index.html", herbInfo = "Loại thảo dược")
         # Other methods: self.redirect, self.get_argument, self.request.body,
 
 class StaticFileHandler_NoCache(tornado.web.StaticFileHandler):
